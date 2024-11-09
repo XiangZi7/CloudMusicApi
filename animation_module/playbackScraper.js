@@ -86,6 +86,11 @@ const playbackScraper = {
       const info$ = cheerio.load(infoResponse.data)
       const title = info$('.product-title').text().trim() // 提取标题
       const rate = info$('.rate').text().trim() // 提取评分
+      // 提取封面图像的URL
+      const coverImageUrl = info$('header.product-header img.thumb')
+        .attr('src')
+        .trim()
+
       const director = info$('.product-excerpt')
         .eq(0)
         .find('span')
@@ -101,6 +106,8 @@ const playbackScraper = {
         .text()
         .trim() // 提取剧情简介
 
+      // 如果需要完整的URL（假如服务器根目录为http://example.com）
+      const fullCoverImageUrl = `https://nnyy.in${coverImageUrl}`
       // 准备返回结果
       const detailedInfo = {
         title,
@@ -111,6 +118,7 @@ const playbackScraper = {
         country,
         alias,
         synopsis,
+        coverImageUrl: fullCoverImageUrl,
       }
 
       // 返回消息
